@@ -78,8 +78,7 @@ impl SecurityManager {
 
         let cb = ChannelBuilder::new(env)
             .keepalive_time(Duration::from_secs(10))
-            .keepalive_timeout(Duration::from_secs(3))
-            .use_local_subchannel_pool(true);
+            .keepalive_timeout(Duration::from_secs(3));
 
         let channel = if self.ca.is_empty() {
             cb.connect(&addr)
