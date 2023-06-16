@@ -8,6 +8,11 @@ use futures::{future::try_join_all, prelude::*};
 use tikv_client_proto::{errorpb, errorpb::EpochNotMatch, kvrpcpb};
 use tikv_client_store::{HasKeyErrors, HasRegionError, HasRegionErrors, KvClient};
 use tokio::sync::Semaphore;
+use tokio::runtime::Runtime;
+
+lazy_static::lazy_static! {
+    static ref INSTANCE: Runtime = Runtime::new().unwrap();
+}
 
 use crate::{
     backoff::Backoff,
@@ -90,7 +95,7 @@ where
             let (shard, region_store) = shard?;
             let mut clone = current_plan.clone();
             clone.apply_shard(shard, &region_store)?;
-            let handle = tokio::spawn(Self::single_shard_handler(
+            let handle = INSTANCE.spawn(Self::single_shard_handler(
                 pd_client.clone(),
                 clone,
                 region_store,

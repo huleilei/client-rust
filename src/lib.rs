@@ -118,6 +118,7 @@ mod proptests;
 #[macro_use]
 extern crate slog;
 extern crate slog_term;
+extern crate num_cpus;
 
 #[doc(inline)]
 pub use crate::backoff::Backoff;
