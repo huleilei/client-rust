@@ -63,8 +63,9 @@ impl Client<PdRpcClient> {
     pub async fn new<S: Into<String>>(
         pd_endpoints: Vec<S>,
         logger: Option<Logger>,
+        atomic_option: Option<bool>,
     ) -> Result<Self> {
-        Self::new_with_config(pd_endpoints, Config::default(), logger).await
+        Self::new_with_config(pd_endpoints, Config::default(), logger, atomic_option).await
     }
 
     /// Create a raw [`Client`] with a custom configuration, and connect to the TiKV cluster.
@@ -93,6 +94,7 @@ impl Client<PdRpcClient> {
         pd_endpoints: Vec<S>,
         config: Config,
         optional_logger: Option<Logger>,
+        atomic_option: Option<bool>,
     ) -> Result<Self> {
         let logger = optional_logger.unwrap_or_else(|| {
             let plain = slog_term::PlainSyncDecorator::new(std::io::stdout());
@@ -111,7 +113,7 @@ impl Client<PdRpcClient> {
         Ok(Client {
             rpc,
             cf: None,
-            atomic: false,
+            atomic: atomic_option.unwrap_or(false),
             logger,
         })
     }
