@@ -18,7 +18,7 @@ pub struct Config {
     pub timeout: Duration,
 }
 
-const DEFAULT_REQUEST_TIMEOUT: Duration = Duration::from_secs(2);
+const DEFAULT_REQUEST_TIMEOUT: Duration = Duration::from_secs(30);
 
 impl Default for Config {
     fn default() -> Self {
